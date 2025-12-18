@@ -27,17 +27,35 @@ builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"] =
 // =============================
 // CORS - UPDATED FOR PRODUCTION
 // =============================
-var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
+var allowedOrigins = new List<string>
+{
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "http://localhost:5174",
+    "https://localhost:5174",
+    "https://bookingsystemfrontend.onrender.com"
+};
+
+// Add environment variable if it exists
+var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+if (!string.IsNullOrEmpty(frontendUrl) && !allowedOrigins.Contains(frontendUrl))
+{
+    allowedOrigins.Add(frontendUrl);
+}
+
+// Debug: Log allowed origins
+Console.WriteLine("=== ALLOWED CORS ORIGINS ===");
+foreach (var origin in allowedOrigins)
+{
+    Console.WriteLine($"  - {origin}");
+}
+Console.WriteLine("============================");
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173", "https://localhost:5173",
-                "http://localhost:5174", "https://localhost:5174",
-                frontendUrl  // Add your production frontend URL
-            )
+        policy.WithOrigins(allowedOrigins.ToArray())
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
