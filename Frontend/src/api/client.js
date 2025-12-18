@@ -45,6 +45,7 @@ export const apiCall = async (endpoint, options = {}) => {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({
             userId: user.id,
             refreshToken: refreshToken,
@@ -67,6 +68,7 @@ export const apiCall = async (endpoint, options = {}) => {
           response = await fetch(`${API_BASE_URL}${endpoint}`, {
             ...options,
             headers,
+            credentials: 'include',
           });
         } else {
           isRefreshing = false;
