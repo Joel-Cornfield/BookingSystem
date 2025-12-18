@@ -15,6 +15,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out ./
 
-# Expose port (Vercel uses 3000 by default for Docker)
+# Expose port
 EXPOSE 3000
+
+# Set environment variables
+ENV ASPNETCORE_ENVIRONMENT=Production
+
 ENTRYPOINT ["dotnet", "BookingSystem.dll"]

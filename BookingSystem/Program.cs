@@ -9,6 +9,12 @@ using BookingSystem.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // =============================
+// PORT CONFIGURATION FOR VERCEL
+// =============================
+var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+// =============================
 // LOAD SECRETS FROM ENV VARIABLES
 // =============================
 builder.Configuration["AppSettings:Token"] = Environment.GetEnvironmentVariable("JWT_TOKEN") ?? "";
@@ -19,15 +25,18 @@ builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"] =
     Environment.GetEnvironmentVariable("DB_CONNECTION") ?? "";
 
 // =============================
-// CORS
+// CORS - UPDATED FOR PRODUCTION
 // =============================
+var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
                 "http://localhost:5173", "https://localhost:5173",
-                "http://localhost:5174", "https://localhost:5174"
+                "http://localhost:5174", "https://localhost:5174",
+                frontendUrl  // Add your production frontend URL
             )
               .AllowAnyMethod()
               .AllowAnyHeader()
@@ -91,11 +100,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Remove or comment out HTTPS redirection for Vercel
+// Vercel handles HTTPS at the edge
+// app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
