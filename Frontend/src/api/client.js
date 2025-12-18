@@ -28,6 +28,7 @@ export const apiCall = async (endpoint, options = {}) => {
   let response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   // If we get a 401 and have a refresh token, try to refresh
