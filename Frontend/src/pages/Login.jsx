@@ -12,27 +12,40 @@ export const Login = () => {
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      // auth.login now returns the token object directly
-      const response = await auth.login({ email, password });
-
-      // Extract data from response
-      const { accessToken, refreshToken, user } = response;
-
-      // Update context and localStorage
-      login(user, accessToken, refreshToken);
-
-      // Redirect after successful login
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.message || 'Login failed');
-    } finally {
-      setLoading(false);
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  try {
+    // auth.login now returns the token object directly
+    const response = await auth.login({ email, password });
+    
+    console.log('Login response:', response); // Debug log
+    
+    // Check if response has the expected structure
+    if (!response || !response.accessToken) {
+      throw new Error('Invalid response format from server');
     }
-  };
+
+    // Extract data from response
+    const { accessToken, refreshToken, user } = response;
+
+    // Validate that we have all required data
+    if (!accessToken || !refreshToken || !user) {
+      throw new Error('Missing required authentication data');
+    }
+
+    // Update context and localStorage
+    login(user, accessToken, refreshToken);
+
+    // Redirect after successful login
+    navigate('/dashboard');
+  } catch (err) {
+    console.error('Login error:', err); // Debug log
+    setError(err.message || 'Login failed');
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) {
     return (
