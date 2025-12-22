@@ -28,9 +28,6 @@ builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"] =
 // CORS - UPDATED FOR PRODUCTION
 // =============================
 var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
-Console.WriteLine("=== CORS DEBUG ===");
-Console.WriteLine($"FRONTEND_URL env: '{frontendUrl}'");
-
 
 builder.Services.AddCors(options =>
 {
