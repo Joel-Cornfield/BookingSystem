@@ -109,8 +109,8 @@ public class ClassServices(AppDbContext context) : IClassServices, IClassAdminSe
         var session = new ClassSession();
 
         session.ClassId = classId;
-        session.StartTime = request.StartTime;
-        session.EndTime = request.EndTime;
+        session.StartTime = request.StartTime.ToUniversalTime();
+        session.EndTime = request.EndTime.ToUniversalTime();
         session.Room = request.Room;
         session.MaxCapacity = request.MaxCapacity;
 
@@ -164,8 +164,8 @@ public class ClassServices(AppDbContext context) : IClassServices, IClassAdminSe
         var session = await context.ClassSessions.FindAsync(sessionId);
         if (session is null) return null;
 
-        if (dto.StartTime.HasValue) session.StartTime = dto.StartTime.Value;
-        if (dto.EndTime.HasValue) session.EndTime = dto.EndTime.Value;
+        if (dto.StartTime.HasValue) session.StartTime = dto.StartTime.Value.ToUniversalTime();
+        if (dto.EndTime.HasValue) session.EndTime = dto.EndTime.Value.ToUniversalTime();
         if (!string.IsNullOrEmpty(dto.Room)) session.Room = dto.Room;
         if (dto.MaxCapacity.HasValue) session.MaxCapacity = dto.MaxCapacity.Value;
 

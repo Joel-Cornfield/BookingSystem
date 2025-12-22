@@ -108,39 +108,29 @@ public class ClassesController(IClassServices classService, IClassAdminServices 
     [Authorize(Roles = "Admin,Trainer")]
     public async Task<ActionResult<ClassSessionDto>> CreateSession(Guid id, [FromBody] CreateSessionDto request)
     {
-        try
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var session = await classAdminService.CreateSession(id, request);
-
-            if (session is null)
-            {
-                return NotFound("Class not found");
-            }
-
-            var sessionDto = new ClassSessionDto
-            {
-                Id = session.Id,
-                StartTime = session.StartTime,
-                EndTime = session.EndTime,
-                Room = session.Room,
-                MaxCapacity = session.MaxCapacity,
-                CurrentBookingCount = 0
-            };
-
-            return CreatedAtAction(nameof(GetSessionsByClass), new { id }, sessionDto);
+            return BadRequest(ModelState);
         }
-        catch (Exception ex)
+
+        var session = await classAdminService.CreateSession(id, request);
+
+        if (session is null)
         {
-            // Log the exception
-            Console.WriteLine($"Error creating session: {ex.Message}");
-            Console.WriteLine($"Stack trace: {ex.StackTrace}");
-            return StatusCode(500, new { message = "Internal server error", details = ex.Message });
+            return NotFound("Class not found");
         }
+
+        var sessionDto = new ClassSessionDto
+        {
+            Id = session.Id,
+            StartTime = session.StartTime,
+            EndTime = session.EndTime,
+            Room = session.Room,
+            MaxCapacity = session.MaxCapacity,
+            CurrentBookingCount = 0
+        };
+
+        return CreatedAtAction(nameof(GetSessionsByClass), new { id }, sessionDto);
     }
 
     // Update a session (Admin or Trainer)

@@ -45,8 +45,8 @@ public class TrainerService(AppDbContext context) : ITrainerServices, ITrainerAd
         {
             TrainerId = trainerId,
             MemberId = memberId, 
-            StartTime = request.StartTime,
-            EndTime = request.EndTime,
+            StartTime = request.StartTime.ToUniversalTime(),
+            EndTime = request.EndTime.ToUniversalTime(),
             Status = "Pending"
         };
 
