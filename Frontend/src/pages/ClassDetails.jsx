@@ -89,6 +89,21 @@ export const ClassDetails = () => {
     );
   }
 
+  if (!sessionList) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center">
+          <div className="text-5xl mb-4">🔍</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">No Sessions Available</h2>
+          <p className="text-gray-600 mb-4">The class you're looking for currently has no sessions. Come back later to check for any updates.</p>
+          <Link to="/classes" className="text-blue-600 hover:text-blue-700 font-semibold">
+            ← Back to Classes
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
