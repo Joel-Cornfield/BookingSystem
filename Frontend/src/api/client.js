@@ -132,7 +132,7 @@ export const sessions = {
   getMemberBookings: () => apiCall('/sessions/member/sessions'),
   createSession: (classId, data) => apiCall(`/classes/${classId}/createsession`, { method: 'POST', body: JSON.stringify(data) }),
   updateSession: (sessionId, data) => apiCall(`/classes/sessions/${sessionId}/update`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteSession: (sessionId) => apiCall(`/classes/sessions/${sessionId}/update`, { method: 'DELETE' }),
+  deleteSession: (sessionId) => apiCall(`/classes/sessions/${sessionId}/delete`, { method: 'DELETE' }),
 };
 
 // Trainers API calls
