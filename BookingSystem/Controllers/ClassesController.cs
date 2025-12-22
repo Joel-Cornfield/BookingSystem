@@ -193,12 +193,8 @@ public class ClassesController(IClassServices classService, IClassAdminServices 
     public async Task<ActionResult<List<ClassSessionDto>>> GetSessionsByClass(Guid id)
     {
         var sessions = await classService.GetSessionsByClass(id);
-
-        if (!sessions.Any())
-        {
-            return NotFound("No sessions found for this class");
-        }
-
+    
+        // Always return OK, even if empty
         return Ok(sessions);
     }
 
