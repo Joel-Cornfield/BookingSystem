@@ -123,9 +123,11 @@ public class ClassesController(IClassServices classService, IClassAdminServices 
         var sessionDto = new ClassSessionDto
         {
             Id = session.Id,
+            ClassId = session.ClassId,
             StartTime = session.StartTime,
             EndTime = session.EndTime,
             Room = session.Room,
+            MaxCapacity = session.MaxCapacity,
             CurrentBookingCount = 0
         };
 
