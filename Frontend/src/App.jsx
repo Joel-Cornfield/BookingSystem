@@ -125,7 +125,7 @@ function App() {
             <Route
               path="/admin/sessions"
               element={
-                <ProtectedRoute requiredRoles={["Trainer"]}>
+                <ProtectedRoute requiredRoles={["Admin"]}>
                   <ManageSessions />
                 </ProtectedRoute>
               }
