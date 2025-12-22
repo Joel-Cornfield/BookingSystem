@@ -120,17 +120,18 @@ app.UseCors("AllowFrontend");
 
 app.Use(async (context, next) =>
 {
-    if (context.Request.Method == HttpMethods.Options)
-    {
-        context.Response.StatusCode = 204;
-        return;
-    }
     await next();
+
+    if (!context.Response.Headers.ContainsKey("Access-Control-Allow-Origin"))
+    {
+        context.Response.Headers["Access-Control-Allow-Origin"] =
+            context.Request.Headers["Origin"].ToString();
+        context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+    }
 });
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 
 app.Run();
