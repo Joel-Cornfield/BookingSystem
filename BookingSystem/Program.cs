@@ -117,13 +117,41 @@ app.UseCors("AllowFrontend");
 
 app.Use(async (context, next) =>
 {
+    try
+    {
+        await next();
+    }
+    catch (Exception)
+    {
+        // Ensure CORS headers are added even on exceptions
+        if (!context.Response.Headers.ContainsKey("Access-Control-Allow-Origin"))
+        {
+            var origin = context.Request.Headers["Origin"].ToString();
+            if (!string.IsNullOrEmpty(origin))
+            {
+                context.Response.Headers["Access-Control-Allow-Origin"] = origin;
+                context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+                context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
+                context.Response.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
+            }
+        }
+        throw; // Re-throw to let the default exception handler deal with it
+    }
+});
+
+// Custom middleware to add CORS headers if not present
+app.Use(async (context, next) =>
+{
     await next();
 
     if (!context.Response.Headers.ContainsKey("Access-Control-Allow-Origin"))
     {
-        context.Response.Headers["Access-Control-Allow-Origin"] =
-            context.Request.Headers["Origin"].ToString();
-        context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+        var origin = context.Request.Headers["Origin"].ToString();
+        if (!string.IsNullOrEmpty(origin))
+        {
+            context.Response.Headers["Access-Control-Allow-Origin"] = origin;
+            context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+        }
     }
 });
 
